@@ -1,0 +1,475 @@
+"git必须下载，才能用PlugInstall 命令
+
+"关闭兼容模式
+set nocompatible
+"定义<Leader>键,, 查找 map 查看快捷命令方式
+let mapleader=";"
+call plug#begin('~/.vim/plugged')
+"背景
+Plug 'aonemd/kuroi.vim'
+Plug 'nanotech/jellybeans.vim'
+Plug 'AlessandroYorba/Alduin'
+Plug 'tomasr/molokai'
+"语法高亮CPP
+Plug 'octol/vim-cpp-enhanced-highlight'
+"let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_posix_standard = 1
+let g:cpp_experimental_simple_template_highlight = 1
+"格式化,快捷键leader+0  sudo apt install astyle clang-format python-pep8 python3-pep8 python-autopep8 yapf
+Plug 'Chiel92/vim-autoformat'
+noremap <Leader>0 :Autoformat<CR>
+let g:autoformat_autoindent=0
+let g:autoformat_retab=0
+let g:autoformat_remove_trailing_spaces=0
+"自动格式化
+au BufWrite * :Autoformat
+"自动格式化python代码
+"au BufWrite*.py:Autoformat
+"缩进,快捷键 i 开/关缩进可视化
+Plug 'nathanaelkane/vim-indent-guides'
+ let g:indent_guides_enable_on_vim_startup=1
+ let g:indent_guides_start_level=2
+ let g:indent_guides_guide_size=1
+ let g:indexer_disableCtagsWarning=1
+ :nmap <silent> <Leader>t <Plug>IndentGuidesToggle
+"接口和实现切换,*.cpp和*.h之间切换,leader+fd 实现,头文件和实现的切换
+Plug 'derekwyatt/vim-fswitch'
+nmap <silent> <Leader>fd :FSHere<cr>
+"书签可视化,m+任意字母建立一个书签，mn mp 上一个和下一个书签,mda删除所有书签
+Plug 'kshenoy/vim-signature'
+let g:SignatureMap = {
+        \ 'Leader'             :  "m",
+        \ 'PlaceNextMark'      :  "m,",
+        \ 'ToggleMarkAtLine'   :  "m.",
+        \ 'PurgeMarksAtLine'   :  "m-",
+        \ 'DeleteMark'         :  "dm",
+        \ 'PurgeMarks'         :  "mda",
+        \ 'PurgeMarkers'       :  "m<BS>",
+        \ 'GotoNextLineAlpha'  :  "']",
+        \ 'GotoPrevLineAlpha'  :  "'[",
+        \ 'GotoNextSpotAlpha'  :  "`]",
+        \ 'GotoPrevSpotAlpha'  :  "`[",
+        \ 'GotoNextLineByPos'  :  "]'",
+        \ 'GotoPrevLineByPos'  :  "['",
+        \ 'GotoNextSpotByPos'  :  "mn",
+        \ 'GotoPrevSpotByPos'  :  "mp",
+        \ 'GotoNextMarker'     :  "[+",
+        \ 'GotoPrevMarker'     :  "[-",
+        \ 'GotoNextMarkerAny'  :  "]=",
+        \ 'GotoPrevMarkerAny'  :  "[=",
+        \ 'ListLocalMarks'     :  "ms",
+        \ 'ListLocalMarkers'   :  "m?"
+        \ }
+Plug 'majutsushi/tagbar'
+let tagbar_left=1 
+" 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag
+nnoremap <Leader>il :TagbarToggle<CR> 
+let tagbar_width=38
+" tagbar 子窗口中不显示冗余帮助信息 
+let g:tagbar_compact=1
+" 设置 ctags 对哪些代码标识符生成标签
+let g:tagbar_type_cpp = {
+    \ 'kinds' : [
+         \ 'c:classes:0:1',
+         \ 'd:macros:0:1',
+         \ 'e:enumerators:0:0', 
+         \ 'f:functions:0:1',
+         \ 'g:enumeration:0:1',
+         \ 'm:members:0:1',
+         \ 'n:namespaces:0:1',
+         \ 's:structs:0:1',
+         \ 't:typedefs:0:1',
+         \ 'u:unions:0:1',
+         \ 'v:global:0:1',
+         \ 'x:external:0:1'
+     \ ],
+     \ 'sro'        : '::',
+     \ 'kind2scope' : {
+         \ 'g' : 'enum',
+         \ 'n' : 'namespace',
+         \ 'c' : 'class',
+         \ 's' : 'struct',
+         \ 'u' : 'union'
+     \ },
+     \ 'scope2kind' : {
+         \ 'enum'      : 'g',
+         \ 'namespace' : 'n',
+         \ 'class'     : 'c',
+         \ 'struct'    : 's',
+         \ 'union'     : 'u'
+     \ }
+\ }
+"\ 'l:local:0:1',
+"\ 'p:functions_prototypes:0:2',
+
+"自动生成ctags
+Plug 'vim-scripts/indexer.tar.gz'
+Plug 'vim-scripts/DfrankUtil'
+Plug 'vim-scripts/vimprj'
+" 设置插件 indexer 调用 ctags 的参数
+" 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v
+" 默认 --fields=+iaS 不满足 YCM 要求，需改为 --fields=+iaSl
+let g:indexer_ctagsCommandLineOptions="--c++-kinds=+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+
+"更高级的内容查找
+Plug 'yegappan/grep'
+Plug 'mileszs/ack.vim'
+Plug 'dyng/ctrlsf.vim'
+":CtrlSF 跨文件查找
+"将自动提取光标所在关键字进行查找，你也可以指定 ack 的选项
+":CtrlSF -i -C 1 [pattern] /my/path/  search in project
+nnoremap <Leader>sp :CtrlSF<CR>  
+
+"多光标配合查找用更合适
+Plug 'terryma/vim-multiple-cursors'
+let g:multi_cursor_next_key='<S-n>'
+let g:multi_cursor_skip_key='<S-k>'
+
+"注释快捷方式
+Plug 'preservim/nerdcommenter'
+"<leader>cc，注释当前选中文本，如果选中的是整行则在每行首添加 //，如果选中一行的部分内容则在选中部分前后添加分别 /、/；
+"<leader>cu，取消选中文本块的注释。
+
+
+
+"模板补全
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets' "这里是snippets目录里面是模板补全样式
+"let g:UltiSnipsSnippetDirectories=["mysnippets"]
+let g:UltiSnipsExpandTrigger="<leader><tab>"
+let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
+let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+
+
+
+Plug 'ycm-core/YouCompleteMe',{'do':'./install.py --clang-completer','for':['c','cpp']}
+let g:ycm_global_ycm_extra_conf='~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py'
+"菜单
+highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
+" 选中项
+highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
+" 补全功能在注释中同样有效
+let g:ycm_complete_in_comments=1
+" 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
+let g:ycm_confirm_extra_conf=0
+" 开启 YCM 标签补全引擎
+let g:ycm_collect_identifiers_from_tags_files=1
+" 引入 C++ 标准库tags
+set tags+=/data/misc/software/misc./vim/stdcpp.tags
+" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
+inoremap <leader>; <C-x><C-o>
+" 补全内容不以分割子窗口形式出现，只显示补全列表
+set completeopt-=preview
+" 从第一个键入字符就开始罗列匹配项
+let g:ycm_min_num_of_chars_for_completion=1
+" 禁止缓存匹配项，每次都重新生成匹配项
+let g:ycm_cache_omnifunc=0
+" 语法关键字补全			
+let g:ycm_seed_identifiers_with_syntax=1
+
+
+
+
+
+call plug#end()
+
+
+" 正向遍历同名标签
+nmap <Leader>tn :tnext<CR>
+" 反向遍历同名标签
+nmap <Leader>tp :tprevious<CR>""
+"ctrl+o,和ctrl+i 返回上一个光标位置 ctrl+] 优先于 <Leader>tn
+
+" 只能是 #include 或已打开的文件
+"nnoremap <leader>jc :YcmCompleter GoToDeclaration<CR>
+"nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>"
+
+
+
+
+"语法高亮 
+set syntax=on
+syntax enable
+set background=dark
+set t_Co=256
+colorscheme jellybeans
+"colorscheme alduin
+"colorscheme  molokai
+"colorscheme kuroi
+
+" 设置 vimrc 修改保存后立刻生效，不用在重新打开
+" 建议配置完成后将这个关闭
+"autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+
+
+"开启文件类型侦测
+filetype on
+"针对不同文件类型加载不同插件
+filetype plugin on
+"自适应不同语言的智能缩进
+filetype indent on
+
+
+set nu "设置行号
+set cursorline "突出显示行号
+"set cursorcolumn "突出显示列号
+set showmatch "显示括号匹配
+set tabstop=4 "设置tab长度为4个空格
+set shiftwidth=4 "设置自动缩进长度为4个空格
+set autoindent "继承前一行的缩进方式，适用于多行注释
+set softtabstop=4
+set browsedir=buffer "文件浏览器的目录
+set scrolloff=0 "到达边界时自动滚屏
+
+"开启实时搜索
+set incsearch
+"搜索时候大小写不敏感
+set ignorecase
+"退出插入模式指定类型的文件自动保存
+au InsertLeave *.go,*.sh,*.php,*.lua write
+"set noundofile
+"set nobackup
+"set noswapfile
+" swp/undo
+set backup
+set undofile
+set history=1000
+set bdir=~/.vim/.backups//"这三个目录需要自己手动建立
+set undodir=~/.vim/.undo//
+set directory=~/.vim/.swp//
+" 设置当文件被改动时自动载入
+set autoread
+"代码补全
+set completeopt=preview,menu
+"共享剪贴板
+"set clipboard=unnamed
+"自动保存
+set autowrite
+set ruler                   " 打开状态栏标尺
+set magic                   " 设置魔术
+" 设置在状态行显示的信息
+""set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ %{&encoding}\ %c:%l/%L%)\
+set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
+""set foldcolumn=0
+" Tab键的宽度
+set tabstop=4
+" 统一缩进为4
+set softtabstop=4
+set shiftwidth=4
+" 用空格代替制表符
+set expandtab
+" 在行和段开始处使用制表符
+set smarttab
+"搜索逐字符高亮
+set hlsearch
+set incsearch
+"行内替换
+set gdefault
+"编码设置
+set enc=utf-8
+set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+"语言设置
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+" 总是显示状态行
+set laststatus=2
+" 命令行（在状态行下）的高度，默认为1，这里是1
+set cmdheight=1
+" 保存全局变量
+set viminfo+=!
+" 带有如下符号的单词不要被换行分割
+set iskeyword+=_,$,@,%,#,-
+" 字符间插入的像素行数目
+set linespace=0
+" 增强模式中的命令行自动完成操作
+set wildmenu
+" 使回格键（backspace）正常处理indent, eol, start等
+set backspace=2
+" 允许backspace和光标键跨越行边界
+"set whichwrap+=<,>,h,l
+" 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位）
+set mouse=a
+set selection=exclusive
+set selectmode=mouse,key
+" 通过使用: commands命令，告诉我们文件的哪一行被改变过
+set report=0
+" 在被分割的窗口间显示空白，便于阅读
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+" 高亮显示匹配的括号
+set showmatch
+" 匹配括号高亮的时间（单位是十分之一秒）
+set matchtime=1
+" 光标移动到buffer的顶部和底部时保持2行距离
+set scrolloff=2
+" 为C程序提供自动缩进
+set smartindent
+" 高亮显示普通txt文件（需要txt.vim脚本）
+au BufRead,BufNewFile *  setfiletype txt
+"自动补全
+":inoremap ( ()<ESC>i
+":inoremap ) <c-r>=ClosePair(')')<CR>
+":inoremap { {}<ESC>o
+":inoremap } <c-r>=ClosePair('}')<CR>
+":inoremap [ []<ESC>i
+":inoremap ] <c-r>=ClosePair(']')<CR>
+":inoremap " ""<ESC>i
+":inoremap ' ''<ESC>i
+function! ClosePair(char)
+	if getline('.')[col('.') - 1] == a:char
+			return "\<Right>"
+	else
+			return a:char
+	endif
+endfunction
+filetype plugin indent on
+"打开文件类型检测, 加了这句才可以用智能补全
+set completeopt=longest,menu
+
+"禁止光标闪烁
+"set gcr=a:block-blinkon0
+"禁止滚动条
+"set guioptions-=l
+"set guioptions-=L
+"set guioptions-=r
+"set guioptions-=R
+"禁止显示菜单和工具条
+set guioptions+=m
+set guioptions+=T
+"set showtabline=2     " 总是显示标签栏"
+"设置字体
+set guifont=YaHei\ Consolas\ Hybrid\ 11.5
+"禁止拆行
+"Toggle Menu and Toolbar， F2 切换菜单栏是否显示
+set nowrap
+map <silent> <F2> :if &guioptions =~# 'T' <Bar>
+        \set guioptions-=T <Bar>
+        \set guioptions-=m <bar>
+    \else <Bar>
+        \set guioptions+=T <Bar>
+        \set guioptions+=m <Bar>
+    \endif<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""新文件标题
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"新建.c,.h,.sh,.java文件，自动插入文件头
+autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java exec ":call SetTitle()"
+""定义函数SetTitle，自动插入文件头
+func SetTitle()
+	"如果文件类型为.sh文件
+	if &filetype == 'sh'
+		call setline(1, "##########################################################################")
+		call append(line("."), "# File Name: ".expand("%"))
+		call append(line(".")+1, "# Author: gaopengfei ")
+		call append(line(".")+2, "# mail: amoscykl980629@163.com")
+		call append(line(".")+3, "# Created Time: ".strftime("%c"))
+		call append(line(".")+4, "#########################################################################")
+		call append(line(".")+5, "#!/bin/zsh")
+		call append(line(".")+6, "PATH=/home/gpf/bin:/home/gpf/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin")
+		call append(line(".")+7, "export PATH")
+		call append(line(".")+8, "")
+	else
+		call setline(1, "/*************************************************************************")
+		call append(line("."), "	> File Name: ".expand("%"))
+		call append(line(".")+1, "	> Author: gaopengfei")
+		call append(line(".")+2, "	> Mail:  ")
+		call append(line(".")+3, "	> Created Time: ".strftime("%c"))
+		call append(line(".")+4, " ************************************************************************/")
+		call append(line(".")+5, "")
+	endif
+	if &filetype == 'cpp'
+		call append(line(".")+6, "#include<iostream>")
+		call append(line(".")+7, "using namespace std;")
+		call append(line(".")+8, "")
+	endif
+	if &filetype == 'c'
+		call append(line(".")+6, "#include<stdio.h>")
+		call append(line(".")+7, "")
+	endif
+	"	if &filetype == 'java'
+	"		call append(line(".")+6,"public class ".expand("%"))
+	"		call append(line(".")+7,"")
+	"	endif
+	"新建文件后，自动定位到文件末尾
+	autocmd BufNewFile * normal G
+endfunc
+
+
+
+
+
+
+"v模式下复制内容到系统剪切板，此功能需要vim支持+系统剪切板寄存器
+vmap <Leader>c "+yy
+"n模式下复制一行到系统剪切板
+nmap <Leader>c "+yy
+"使用系统剪切版
+nmap <Leader>v "+p
+
+"去除高亮
+nmap <Leader>z :noh<CR>
+"映射buffer
+map <leader>1 :b 1<CR>
+map <leader>2 :b 2<CR>
+map <leader>3 :b 3<CR>
+map <leader>4 :b 4<CR>
+map <leader>5 :b 5<CR>
+map <leader>6 :b 6<CR>
+map <leader>7 :b 7<CR>
+map <leader>8 :b 8<CR>
+map <leader>9 :b 9<CR>
+"映射leader+B为移动到行首
+nmap <leader>B 0
+nmap <leader>b 0
+nmap <leader>E $
+nmap <leader>e $
+":bd 1<CR> <CR>是回车键，此命令是关闭缓冲区1
+"粘贴模式
+nmap <leader>p :set paste
+"反撤销，u是撤销，r映射成Ctrl+r,r 加所需要的替换字符可以替换
+"nmap r <C-rl>
+
+"定义快捷键关闭当前分割窗口
+nmap <Leader>q :wq<CR>
+nmap <Leader>w :w<CR>
+nmap <Leader>wq :wa<CR>:q<CR>
+"窗口左右上下跳转
+nmap <Leader>l <C-W>l
+nmap <Leader>h <C-W>h
+nmap <Leader>k <C-W>k
+nmap <Leader>l <C-W>l
+"结对符之间跳转
+nmap <Leader>m %
+
+"映射全选+复制
+map <C-A> ggVGY
+map! <C-A> <Esc>ggVGY
+map <F12> gg=G
+" 选中状态下 Ctrl+c 复制
+vmap <C-c> "+y
+" quickfix模式
+autocmd FileType c,cpp map <buffer> <leader><space> :w<cr>:make<cr>
+
+" 基于缩进或语法进行代码折叠
+"set foldmethod=indent
+set foldmethod=syntax
+" 启动 vim 时关闭折叠代码
+set nofoldenable
+"za 折叠某部分代码 zM全部折叠 zR打开折叠
+nmap <Leader>zn zR
+nmap <Leader>zm zM
+
+
+
+
+
+
+
+
+
+
+    
