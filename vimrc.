@@ -141,7 +141,7 @@ Plug 'honza/vim-snippets' "这里是snippets目录里面是模板补全样式
 let g:UltiSnipsExpandTrigger="<leader><tab>"
 let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
 let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
-
+"模板选择是 leader后按tab键，跳转到模板的下一个位置也是leader+tab
 
 
 Plug 'ycm-core/YouCompleteMe',{'do':'./install.py --clang-completer','for':['c','cpp']}
