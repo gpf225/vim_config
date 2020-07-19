@@ -1,4 +1,5 @@
 "git必须下载，才能用PlugInstall 命令
+"normal环境执行 :source % 载入改变设置
 
 "关闭兼容模式
 set nocompatible
@@ -26,8 +27,8 @@ let g:autoformat_remove_trailing_spaces=0
 "自动格式化
 au BufWrite * :Autoformat
 "自动格式化python代码
-"au BufWrite*.py:Autoformat
-"缩进,快捷键 i 开/关缩进可视化
+au BufWrite *.py :Autoformat
+"缩进,快捷键 t 开/关缩进可视化
 Plug 'nathanaelkane/vim-indent-guides'
  let g:indent_guides_enable_on_vim_startup=1
  let g:indent_guides_start_level=2
@@ -143,8 +144,9 @@ let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
 let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 "模板选择是 leader后按tab键，跳转到模板的下一个位置也是leader+tab
 
-
-Plug 'ycm-core/YouCompleteMe',{'do':'./install.py --clang-completer','for':['c','cpp']}
+"这里python的类型写好，不是py是python,如果加入,'python'类型启动ycm，需要在设置python的库路径，可以暂时用jedi插件
+Plug 'ycm-core/YouCompleteMe',{'do':'./install.py --clang-completer','for':['c','cpp','go']}
+"--all这个设置有错，python(2) install.py可以执行--clang-completer，python3 install.py可以执行--all,但是下载的时候出错
 let g:ycm_global_ycm_extra_conf='~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py'
 "菜单
 highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
@@ -185,11 +187,92 @@ let NERDTreeMinimalUI=1
 " 删除文件时自动删除文件对应 buffer
 let NERDTreeAutoDeleteBuffer=1
 "常用操作：回车，打开选中文件；r，刷新工程目录文件列表；I（大写），显示/隐藏隐藏文件；m，出现创建/删除/剪切/拷贝操作列表。
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+Plug 'vim-scripts/Conque-GDB'
+let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always with color
+let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
+let g:ConqueTerm_StartMessages = 0 " display warning messages if conqueTerm is configured incorrectly
+
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#whitespace#symbol = '!'
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#formatter = 'default'
+"e[dir] e 后面空格+目录，可以在缓冲区中打开文件,:new 打开新的空缓冲区
+"在缓冲区里新建文件，：b n 转到第n个缓冲区,以下是下一个上一个删除缓冲区
+nmap <Leader>bn :bn<CR>  
+nmap <Leader>bp :bp<CR>  
+nmap <leader>bd :bd<CR>
+
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+" unicode symbols
+"let g:airline_symbols.maxlinenr = '㏑'
+"let g:airline_symbols.branch = '⎇'
+"let g:airline_symbols.paste = '∥'
+"let g:airline_symbols.spell = 'Ꞩ'
+"let g:airline_symbols.notexists = 'Ɇ'
+"let g:airline_symbols.whitespace = 'Ξ'
+let g:airline_symbols.dirty='⚡'
+let g:airline_symbols.crypt = '🔒'
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+
+
+Plug 'dense-analysis/ale'
+
+
+Plug 'Yggdroot/indentLine'
+
+
+Plug 'davidhalter/jedi-vim'
+let g:jedi#completions_command="<S-n>"
+"默认是ctrl+space
+
+
+Plug 'yianwillis/vimcdoc'
+
+Plug 'vim-syntastic/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+Plug 'hdima/python-syntax'
+let python_highlight_all = 1
+"命令：python3syntax 是python3的高亮显示模式，通过：py+Tab键选择
 
 
 call plug#end()
 
-
+"Auto-check file for errors on write:
+let g:PyFlakeOnWrite = 1
+"List of checkers used:
+let g:PyFlakeCheckers = 'pep8,mccabe,pyflakes'
+"Default maximum complexity for mccabe:
+let g:PyFlakeDefaultComplexity=10
+"List of disabled pep8 warnings and errors:
+let g:PyFlakeDisabledMessages = 'E501'
+"Default height of quickfix window:
+let g:PyFlakeCWindow = 6
+"Whether to place signs or not:
+let g:PyFlakeSigns = 1
+"Maximum line length for PyFlakeAuto command
+let g:PyFlakeMaxLineLength = 100
+"Visual-mode key command for PyFlakeAuto
+let g:PyFlakeRangeCommand = 'Q'
 " 正向遍历同名标签
 nmap <Leader>tn :tnext<CR>
 " 反向遍历同名标签
@@ -352,9 +435,10 @@ set completeopt=longest,menu
 "禁止显示菜单和工具条
 set guioptions+=m
 set guioptions+=T
-"set showtabline=2     " 总是显示标签栏"
+"set showtabline=0     "2 总是显示标签栏"
 "设置字体
-set guifont=YaHei\ Consolas\ Hybrid\ 11.5
+"set guifont=YaHei\ Consolas\ Hybrid\ 11.5
+set guifont=Consolas\ for\ Powerline\ FixedD:h123
 "禁止拆行
 "Toggle Menu and Toolbar， F2 切换菜单栏是否显示
 set nowrap
@@ -370,8 +454,9 @@ map <silent> <F2> :if &guioptions =~# 'T' <Bar>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""新文件标题
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"新建.c,.h,.sh,.java文件，自动插入文件头
-autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java exec ":call SetTitle()"
+"新建.c,.h,.sh,.java文件，自动插入文件头,这里注意，.txt 和 .py
+"结尾的文件类型分别是text 和 python
+autocmd BufNewFile *.txt,*.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetTitle()"
 ""定义函数SetTitle，自动插入文件头
 func SetTitle()
 	"如果文件类型为.sh文件
@@ -387,6 +472,8 @@ func SetTitle()
 		call append(line(".")+7, "export PATH")
 		call append(line(".")+8, "")
 	else
+	endif
+	if &filetype == 'cpp'
 		call setline(1, "/*************************************************************************")
 		call append(line("."), "	> File Name: ".expand("%"))
 		call append(line(".")+1, "	> Author: gaopengfei")
@@ -394,26 +481,43 @@ func SetTitle()
 		call append(line(".")+3, "	> Created Time: ".strftime("%c"))
 		call append(line(".")+4, " ************************************************************************/")
 		call append(line(".")+5, "")
-	endif
-	if &filetype == 'cpp'
 		call append(line(".")+6, "#include<iostream>")
 		call append(line(".")+7, "using namespace std;")
 		call append(line(".")+8, "")
 	endif
 	if &filetype == 'c'
+		call setline(1, "/*************************************************************************")
+		call append(line("."), "	> File Name: ".expand("%"))
+		call append(line(".")+1, "	> Author: gaopengfei")
+		call append(line(".")+2, "	> Mail:  ")
+		call append(line(".")+3, "	> Created Time: ".strftime("%c"))
+		call append(line(".")+4, " ************************************************************************/")
+		call append(line(".")+5, "")
 		call append(line(".")+6, "#include<stdio.h>")
 		call append(line(".")+7, "")
 	endif
-	"	if &filetype == 'java'
-	"		call append(line(".")+6,"public class ".expand("%"))
-	"		call append(line(".")+7,"")
-	"	endif
+    if &filetype == 'text'
+		call setline(1, "##########################################################################")
+		call append(line("."), "# File Name: ".expand("%"))
+		call append(line(".")+1, "# Author: gaopengfei ")
+		call append(line(".")+2, "# mail:")
+		call append(line(".")+3, "# Created Time: ".strftime("%c"))
+		call append(line(".")+4, "#########################################################################")
+        call append(line(".")+6, "#!/usr/bin/python3.6")
+        "call append(line(".")+6, "#!/usr/bin/env python3.6")
+    endif
+    if &filetype == 'python'
+		call setline(1, "#!/usr/bin/python3.6")
+		call append(line("."), "##########################################################################")
+		call append(line(".")+1, "# File Name: ".expand("%"))
+		call append(line(".")+2, "# Author: gaopengfei ")
+		call append(line(".")+3, "# mail:")
+		call append(line(".")+4, "#Created Time: ".strftime("%c"))
+        call append(line(".")+5, "########################################################################")
+    endif
 	"新建文件后，自动定位到文件末尾
 	autocmd BufNewFile * normal G
 endfunc
-
-
-
 
 
 
@@ -456,7 +560,7 @@ nmap <Leader>l <C-W>l
 nmap <Leader>h <C-W>h
 nmap <Leader>k <C-W>k
 nmap <Leader>l <C-W>l
-"结对符之间跳转
+"结对符之间跳转,括号跳转
 nmap <Leader>m %
 
 "映射全选+复制
@@ -486,4 +590,14 @@ nmap <Leader>zm zM
 
 
 
-    
+"python setting
+map <F6> :call PRUN()<CR>
+func! PRUN()
+		exec "w"
+		if &filetype == 'sh'
+			:!time bash %
+		elseif &filetype =='python'
+			exec "!clear"
+			exec "!time python3 %"
+		endif
+endfunc
