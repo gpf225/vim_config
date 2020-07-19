@@ -22,4 +22,12 @@
    sudo apt install tofrodos # unix2dos 和 dos2unix
    #sudo apt install dos2unix
    sudo apt install astyle clang-format python-pep8 python3-pep8 python-autopep8 yapf
-
+   sudo apt install fonts-powerline
+   sudo apt install libncurses5-dev 
+#  history | grep libncurses5-dev >> apt.sh 
+   #vim源码安装
+   git clone https://github.com/vim/vim.git
+   #下面的配置信息使用的时候重新查询一下可能有误
+   ./configure --enable-pythoninterp=yes --with-python3-config-dir=/usr/lib/python3.6/config
+   make 
+   sudo make install
