@@ -106,7 +106,7 @@ let g:tagbar_type_cpp = {
 "\ 'p:functions_prototypes:0:2',
 
 "自动生成ctags
-Plug 'vim-scripts/indexer.tar.gz'
+"Plug 'vim-scripts/indexer.tar.gz'  出现乱码
 Plug 'vim-scripts/DfrankUtil'
 Plug 'vim-scripts/vimprj'
 " 设置插件 indexer 调用 ctags 的参数
@@ -189,10 +189,10 @@ let NERDTreeAutoDeleteBuffer=1
 "常用操作：回车，打开选中文件；r，刷新工程目录文件列表；I（大写），显示/隐藏隐藏文件；m，出现创建/删除/剪切/拷贝操作列表。
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-Plug 'vim-scripts/Conque-GDB'
-let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always with color
-let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
-let g:ConqueTerm_StartMessages = 0 " display warning messages if conqueTerm is configured incorrectly
+"Plug 'vim-scripts/Conque-GDB'出现乱码
+"let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always with color
+"let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
+"let g:ConqueTerm_StartMessages = 0 " display warning messages if conqueTerm is configured incorrectly
 
 
 Plug 'vim-airline/vim-airline'
@@ -241,14 +241,14 @@ let g:jedi#completions_command="<S-n>"
 
 Plug 'yianwillis/vimcdoc'
 
-Plug 'vim-syntastic/syntastic'
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+"Plug 'vim-syntastic/syntastic' 出现乱码
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
 
 Plug 'hdima/python-syntax'
 let python_highlight_all = 1
@@ -368,6 +368,7 @@ set gdefault
 "编码设置
 set enc=utf-8
 set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+set fenc=utf-8
 "语言设置
 set langmenu=zh_CN.UTF-8
 set helplang=cn
